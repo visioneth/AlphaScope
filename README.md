@@ -26,25 +26,9 @@ A **real-time crypto intelligence dashboard** that combines everything serious t
 
 ## Screenshots
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  ◈ ALPHASCOPE          ● LIVE    Last scan: 2026-03-03 04:12 │
-├──────────────┬──────────────┬──────────────────────────────┤
-│ BTC $67,289  │ ETH $2,012   │ SOL $87.69  +7.3%            │
-├──────────────┴──────────────┴──────────────────────────────┤
-│ 🔥 FIRE SIGNALS (1)        │ ⚡ KILL ZONE COUNTDOWN         │
-│ POWER  score=8.0           │  NY CLOSE 20:00 UTC           │
-│ FUNDING_FARM               │  ██████████░░░░░  06:42:15    │
-│ funding: -156%/8h          │  98.4% WIN RATE               │
-│ Z-score: -1.2              │  SHORT                        │
-├────────────────────────────┼──────────────────────────────┤
-│ 📊 FUNDING HEATMAP (668)   │ 🐋 WHALE CONSENSUS            │
-│ POWER   -156% ██████████   │  53 whales tracked            │
-│ BARD    -144% █████████    │  LONG  ████░░░░░  44%         │
-│ GAIB     -98% ██████       │  SHORT ██████░░░  56%         │
-│ DENT     +87% ██████       │  NEUTRAL — no strong consensus│
-└────────────────────────────┴──────────────────────────────┘
-```
+![AlphaScope Live Dashboard](screenshot.png)
+
+*Live dashboard — POWER 8.0 FIRE signal, 65% SHORT whale consensus, NY Close kill zone countdown, funding heatmap across 668+ coins.*
 
 ---
 
