@@ -23,16 +23,17 @@ import uvicorn
 # CONFIG — point to your signal engine output
 # ═══════════════════════════════════════════════
 BEAST_DIR = Path(r"C:\Users\King Geo\OneDrive\Desktop\V33X_Beast_Pack\V33X_BEAST_PACK")
-SIGNALS_FILE = BEAST_DIR / "v33x_signals_latest.json"
-WHALE_FILE   = BEAST_DIR / "v33x_enhanced_whale_state.json"
+SIGNALS_FILE  = BEAST_DIR / "v33x_signals_latest.json"
+WHALE_FILE    = BEAST_DIR / "v33x_enhanced_whale_state.json"
+FUNDING_FILE  = BEAST_DIR / "v33x_funding_analysis.json"
 PORT = 8080
 
 # Kill Zone schedule (UTC hour → label, win rate, direction)
 KILL_ZONES = [
-    {"hour": 2,  "label": "LATE NIGHT",    "wr": 80.0,  "dir": "SHORT", "et": "9 PM"},
-    {"hour": 10, "label": "LONDON OPEN",   "wr": 88.9,  "dir": "SHORT", "et": "5 AM"},
-    {"hour": 17, "label": "NY MIDDAY",     "wr": 78.7,  "dir": "SHORT", "et": "12 PM"},
-    {"hour": 20, "label": "NY CLOSE",      "wr": 98.4,  "dir": "SHORT", "et": "3 PM"},
+    {"hour": 2,  "label": "LATE NIGHT",      "wr": 80.0,  "dir": "SHORT", "et": "9 PM ET"},
+    {"hour": 10, "label": "EU OPEN",          "wr": 88.9,  "dir": "SHORT", "et": "5 AM ET · London Market Open"},
+    {"hour": 17, "label": "US MARKET OPEN",   "wr": 78.7,  "dir": "SHORT", "et": "12 PM ET"},
+    {"hour": 20, "label": "NY CLOSE",         "wr": 98.4,  "dir": "SHORT", "et": "3 PM ET"},
 ]
 
 app = FastAPI(title="AlphaScope")
@@ -73,13 +74,14 @@ def get_next_kill_zone():
 
 
 def get_prices():
+    # Try Binance US first
     try:
         symbols = ["BTCUSDT", "ETHUSDT", "SOLUSDT"]
         resp = requests.get(
             "https://api.binance.us/api/v3/ticker/24hr",
             params={"symbols": json.dumps(symbols)},
             headers={"User-Agent": "Mozilla/5.0"},
-            timeout=5,
+            timeout=4,
         )
         tickers = resp.json()
         result = {}
@@ -89,9 +91,60 @@ def get_prices():
                 "price": float(t["lastPrice"]),
                 "change24h": float(t["priceChangePercent"]),
             }
-        return result
+        if result:
+            return result
     except Exception:
-        return {}
+        pass
+    # Fallback: CoinGecko Pro
+    try:
+        resp = requests.get(
+            "https://pro-api.coingecko.com/api/v3/simple/price",
+            params={
+                "ids": "bitcoin,ethereum,solana",
+                "vs_currencies": "usd",
+                "include_24hr_change": "true",
+            },
+            headers={
+                "User-Agent": "Mozilla/5.0",
+                "x-cg-pro-api-key": "CG-i9sV4dKkf3YwwA4PJQBPvwaw",
+            },
+            timeout=5,
+        )
+        data = resp.json()
+        return {
+            "BTC": {"price": data["bitcoin"]["usd"], "change24h": data["bitcoin"].get("usd_24h_change", 0)},
+            "ETH": {"price": data["ethereum"]["usd"], "change24h": data["ethereum"].get("usd_24h_change", 0)},
+            "SOL": {"price": data["solana"]["usd"], "change24h": data["solana"].get("usd_24h_change", 0)},
+        }
+    except Exception:
+        pass
+    return {}
+
+
+def get_funding_coins():
+    """Top funding coins from Beast Pack funding analysis (Binance rates)."""
+    try:
+        if FUNDING_FILE.exists():
+            with open(FUNDING_FILE, encoding="utf-8") as f:
+                data = json.load(f)
+            coins = data.get("coins", {})
+            sorted_coins = sorted(
+                coins.items(),
+                key=lambda x: abs(x[1].get("current_rate_pct", 0)),
+                reverse=True
+            )
+            return [
+                {
+                    "coin": coin,
+                    "rate": round(info.get("current_rate_pct", 0) * 100, 4),
+                    "direction": info.get("direction", ""),
+                }
+                for coin, info in sorted_coins[:15]
+                if info.get("current_rate_pct") is not None
+            ]
+    except Exception:
+        pass
+    return []
 
 
 def get_signals_data():
@@ -177,6 +230,7 @@ def build_payload():
         "fire_signals": fire,
         "watch_signals": watch,
         "top_funding": top_funding,
+        "raw_funding": get_funding_coins(),
         "kill_zone": get_next_kill_zone(),
         "prices": get_prices(),
         "whales": get_whale_data(),
