@@ -80,9 +80,16 @@ v33x_signals_latest.json       → fire signals, watch signals, funding extremes
 v33x_enhanced_whale_state.json → whale positions and consensus
 ```
 
-Without these files, AlphaScope runs standalone — showing live BTC/ETH/SOL prices and kill zone timing only.
+Without these files, AlphaScope runs in **standalone mode** — automatically pulling live data from public APIs:
 
-**Want the signal engine?** → [V33X Beast Pack](https://github.com/visioneth) *(private — DM @Vision33X)*
+- **Funding heatmap** → Binance futures public API (no key needed)
+- **FIRE/WATCH signals** → auto-generated from funding extremes
+- **Whale consensus** → Hyperliquid public leaderboard API (no key needed)
+- **Prices** → Binance US with Binance global fallback
+
+Beast Pack takes priority when present. Standalone works out of the box for everyone else.
+
+**Want the full signal engine?** → [V33X Beast Pack](https://github.com/visioneth) *(private — DM @Vision33X)*
 
 ---
 
@@ -118,10 +125,15 @@ This is how I found POWER at **-156% funding** before it moved.
 alphascope.py          FastAPI app + WebSocket server
 static/index.html      Single-page dashboard (CSS + vanilla JS)
 
-Data sources:
-  Binance US API  → BTC/ETH/SOL live prices
-  Local JSON      → signals, whale data (from Beast Pack signal engine)
-  Internal        → kill zone countdown (pure logic, no API needed)
+Data sources (standalone — no keys required):
+  Binance US / Binance  → BTC/ETH/SOL live prices (US fallback to global)
+  Binance Futures API   → funding rates across all perps
+  Hyperliquid API       → whale leaderboard positions
+  Internal              → kill zone countdown (pure logic, no API)
+
+Data sources (Beast Pack mode — enhanced):
+  v33x_signals_latest.json       → FIRE signals, watch signals, funding extremes
+  v33x_enhanced_whale_state.json → 53 tracked Hyperliquid whale positions
 
 WebSocket pushes every 15 seconds.
 REST endpoint /api/data for polling if preferred.
@@ -141,6 +153,12 @@ No database. No Redis. No message queue. It's as simple as it can be while still
 - [ ] Docker compose for one-command deploy
 
 PRs welcome. Keep it simple.
+
+---
+
+## Community
+
+Join the discussion: **[r/WhalesStreetBets](https://www.reddit.com/r/WhalesStreetBets/)** — kill zones, funding extremes, whale moves, AlphaScope signals posted daily.
 
 ---
 
