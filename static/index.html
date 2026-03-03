@@ -156,9 +156,11 @@ header{
 .pt.short{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.25);}
 
 /* FOOTER */
-footer{padding:7px 18px;background:rgba(4,4,14,0.98);border-top:1px solid rgba(124,58,237,0.1);font-size:0.55rem;color:#1e293b;display:flex;justify-content:center;gap:24px;letter-spacing:1px;}
-footer a{color:#1e293b;text-decoration:none;transition:color 0.2s;}
-footer a:hover{color:#7c3aed;}
+footer{padding:12px 18px;background:rgba(4,4,14,0.98);border-top:1px solid rgba(124,58,237,0.25);font-size:0.72rem;color:#64748b;display:flex;justify-content:center;align-items:center;gap:28px;letter-spacing:1px;flex-wrap:wrap;}
+footer a{color:#a78bfa;text-decoration:none;transition:color 0.2s;font-weight:600;}
+footer a:hover{color:#c4b5fd;}
+.footer-cta{background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.35);color:#f97316;padding:4px 14px;border-radius:20px;font-size:0.72rem;font-weight:700;letter-spacing:1px;transition:all 0.2s;}
+.footer-cta:hover{background:rgba(249,115,22,0.22);color:#fb923c;}
 ::-webkit-scrollbar{width:3px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:rgba(124,58,237,0.3);border-radius:2px;}
@@ -207,7 +209,7 @@ footer a:hover{color:#7c3aed;}
   <div class="card">
     <div class="ch">👁 Watch List<span class="badge" id="watch-badge">0 SIGNALS</span></div>
     <div id="watch-list">
-      <div class="idle"><div class="idle-txt" style="color:#1e293b;">Market Clear</div><div class="idle-sub">No setups in 4.0–7.0 range</div></div>
+      <div class="idle"><div class="idle-txt" style="color:#f59e0b;">Market Clear</div><div class="idle-sub">No setups in 4.0–7.0 range · NY CLOSE 20:00 UTC is the highest probability window · 98.4% WR</div></div>
     </div>
   </div>
 
@@ -267,9 +269,9 @@ footer a:hover{color:#7c3aed;}
 </div>
 
 <footer>
-  <span>AlphaScope · Free &amp; Open Source</span>
+  <span>AlphaScope · Free &amp; Open Source · Built by Vision33X</span>
   <a href="https://github.com/visioneth/AlphaScope" target="_blank">github.com/visioneth/AlphaScope</a>
-  <a href="https://partner.blofin.com/d/Vision33X" target="_blank">Copy Trade · BloFin</a>
+  <a href="https://partner.blofin.com/d/Vision33X" target="_blank" class="footer-cta">Copy Trade on BloFin · Use code Vision33X · $100 Bonus</a>
   <a href="https://x.com/Vision33X" target="_blank">@Vision33X</a>
 </footer>
 </div>
